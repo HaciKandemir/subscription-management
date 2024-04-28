@@ -36,20 +36,35 @@ class DtoValueResolver implements ValueResolverInterface
         }
 
         try {
-            $data = $request->getContent();
+            $data = [];
 
-            $dto = $this->serializer->deserialize(json_encode($data), $argumentType, 'json');
+            if ($request->getMethod() === Request::METHOD_POST) {
+                $data = $request->request->all();
+            } elseif ($request->getMethod() === Request::METHOD_GET) {
+                $data = $request->query->all();
+            }
+
+            $dto = $this->serializer->deserialize(
+                json_encode($data,JSON_THROW_ON_ERROR),
+                $argumentType,
+                'json',
+            );
+
         } catch (\Exception $exception) {
             throw new BadRequestHttpException($exception->getMessage());
         }
 
         $violations = $this->validator->validate($dto);
         if (count($violations) > 0) {
-            $errors = [];
+            $validations = [];
             foreach ($violations as $violation) {
-                $errors[$violation->getPropertyPath()] = $violation->getMessage();
+                $validations[$violation->getPropertyPath()] = $violation->getMessage();
             }
-            throw new BadRequestHttpException(json_encode($errors));
+
+            throw new BadRequestHttpException(json_encode([
+                'message' => 'message.common.not_valid',
+                'validations' => $validations
+            ]));
         }
 
         // create and return the value object
