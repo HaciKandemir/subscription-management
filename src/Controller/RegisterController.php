@@ -20,7 +20,7 @@ class RegisterController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(RegisterDto $registerDto, DeviceService $deviceService): JsonResponse
     {
-        $device = $deviceService->createDevice($registerDto);
+        $device = $deviceService->registerDevice($registerDto);
 
         return $this->successResponse([
             'message'=>'register OK',

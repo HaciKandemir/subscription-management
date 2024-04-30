@@ -31,7 +31,7 @@ class DeviceService
         return $this->deviceRepository->findOneBy($criteria);
     }
 
-    public function createDevice(RegisterDto $registerDto): Device
+    private function createDevice(RegisterDto $registerDto): Device
     {
         $accessToken = $this->generateToken();
 
