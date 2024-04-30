@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Dto\Request\Register\RegisterDto;
-use App\Service\RegisterService;
+use App\Service\DeviceService;
 use App\Traits\JsonResponseTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,9 +18,9 @@ class RegisterController extends AbstractController
      * @throws ExceptionInterface
      */
     #[Route('/register', name: 'app_register')]
-    public function register(RegisterDto $registerDto, RegisterService $registerService): JsonResponse
+    public function register(RegisterDto $registerDto, DeviceService $deviceService): JsonResponse
     {
-        $device = $registerService->createDevice($registerDto);
+        $device = $deviceService->createDevice($registerDto);
 
         return $this->successResponse([
             'message'=>'register OK',

@@ -8,7 +8,7 @@ use App\Repository\DeviceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class RegisterService
+class DeviceService
 {
     private EntityManagerInterface $em;
     private DeviceRepository $deviceRepository;
