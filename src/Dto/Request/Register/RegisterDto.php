@@ -11,24 +11,24 @@ class RegisterDto implements DtoInterface
     #[Assert\NotBlank(message: 'message.u_id.not_blank')]
     #[Assert\Type(type: 'string', message: 'message.u_id.invalid')]
     #[Assert\Length(max: 255, maxMessage: 'message.u_id.max')]
-    public string $uId;
+    private string $uId;
 
     #[Assert\NotNull(message: 'message.app_id.not_null')]
     #[Assert\NotBlank(message: 'message.app_id.not_blank')]
     #[Assert\Type(type: 'integer', message: 'message.app_id.invalid')]
-    public int $appId;
+    private int $appId;
 
     #[Assert\NotNull(message: 'message.language.not_null')]
     #[Assert\NotBlank(message: 'message.language.not_blank')]
     #[Assert\Type(type: 'string', message: 'message.language.invalid')]
     #[Assert\Length(max: 3, maxMessage: 'message.language.max')]
-    public string $language;
+    private string $language;
 
     #[Assert\NotNull(message: 'message.operatingSystem.not_null')]
     #[Assert\NotBlank(message: 'message.operatingSystem.not_blank')]
     #[Assert\Type(type: 'string', message: 'message.operatingSystem.invalid')]
     #[Assert\Length(max: 50, maxMessage: 'message.operatingSystem.max')]
-    public string $operatingSystem;
+    private string $operatingSystem;
 
     public function getUId(): string
     {

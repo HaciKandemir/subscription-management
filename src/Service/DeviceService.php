@@ -36,10 +36,10 @@ class DeviceService
         $accessToken = $this->generateToken();
 
         $device = new Device();
-        $device->setUId($registerDto->uId);
-        $device->setAppId($registerDto->appId);
-        $device->setLanguage($registerDto->language);
-        $device->setOperatingSystem($registerDto->operatingSystem);
+        $device->setUId($registerDto->getUId());
+        $device->setAppId($registerDto->getAppId());
+        $device->setLanguage($registerDto->getLanguage());
+        $device->setOperatingSystem($registerDto->getOperatingSystem());
         $device->setAccessToken($accessToken);
 
         $this->em->persist($device);
