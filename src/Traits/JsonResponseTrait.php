@@ -3,17 +3,44 @@
 namespace App\Traits;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 trait JsonResponseTrait
 {
     /**
+     * @throws ExceptionInterface
+     */
+    private function serialize($data): array
+    {
+        $normalizer = new ObjectNormalizer(null, null, null, null, null, null, [
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => fn ($object) => ['id' => $object->getId()]
+        ]);
+
+        $serializer = new Serializer([
+            new DateTimeNormalizer(),
+            $normalizer
+        ]);
+
+        return $serializer->normalize($data, null, [
+            'datetime_format' => 'Y-m-d H:i:s',
+            AbstractObjectNormalizer::ENABLE_MAX_DEPTH => true
+        ]);
+    }
+
+    /**
      * @param mixed $data
      * @return JsonResponse
+     * @throws ExceptionInterface
      */
     protected function successResponse(mixed $data): JsonResponse
     {
         return $this->sendJsonResponse([
-            'data' => $data,
+            'data' => $this->serialize($data),
             'status' => [
                 'success' => true,
             ]

@@ -1,3 +1,8 @@
+parameters:
+    # if the SECRET env var value is not defined anywhere, Symfony uses this value
+    env(SECRET_KEY): 'defaultSecretKey'
+    SECRET_KEY: '%env(SECRET_KEY)%'
+
 # see https://symfony.com/doc/current/reference/configuration/framework.html
 framework:
     secret: '%env(APP_SECRET)%'
