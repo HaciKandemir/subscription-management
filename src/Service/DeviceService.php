@@ -16,7 +16,7 @@ class DeviceService
         private readonly EntityManagerInterface $em,
         private readonly DeviceRepository $deviceRepository,
         private readonly ParameterBagInterface $params,
-        private readonly SubscriptionService $subscriptionService
+        private readonly AccessTokenService $accessTokenService
     )
     {}
 
@@ -59,13 +59,12 @@ class DeviceService
 
         $clientToken = $this->generateToken();
 
-        $subscription = $this->subscriptionService->findOrCreateSubscription($device, $app);
-        $subscription->setClientToken($clientToken);
-        $subscription->setUpdatedAt(new \DateTimeImmutable());
+        $accessToken = $this->accessTokenService->findOrCreate($device, $app);
+        $accessToken->setToken($clientToken);
 
-        $this->em->persist($subscription);
+        $this->em->persist($accessToken);
         $this->em->flush();
 
-        return $clientToken;
+        return $accessToken->getToken();
     }
 }

@@ -22,9 +22,6 @@ class Subscription
     #[ORM\JoinColumn(nullable: false)]
     private ?App $app = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $clientToken = null;
-
     #[ORM\Column(type: Types::SMALLINT, nullable: true)]
     private ?int $status = null;
 
@@ -67,18 +64,6 @@ class Subscription
     public function setApp(?App $app): static
     {
         $this->app = $app;
-
-        return $this;
-    }
-
-    public function getClientToken(): ?string
-    {
-        return $this->clientToken;
-    }
-
-    public function setClientToken(?string $clientToken): static
-    {
-        $this->clientToken = $clientToken;
 
         return $this;
     }
