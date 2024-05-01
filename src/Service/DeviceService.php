@@ -10,16 +10,12 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class DeviceService
 {
-    private EntityManagerInterface $em;
-    private DeviceRepository $deviceRepository;
-    private ParameterBagInterface $params;
-
-    public function __construct(EntityManagerInterface $em, DeviceRepository $deviceRepository, ParameterBagInterface $params)
-    {
-        $this->em = $em;
-        $this->deviceRepository = $deviceRepository;
-        $this->params = $params;
-    }
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly DeviceRepository $deviceRepository,
+        private readonly ParameterBagInterface $params
+    )
+    {}
 
     public function generateToken(): string
     {

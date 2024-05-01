@@ -12,14 +12,11 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class DtoValueResolver implements ValueResolverInterface
 {
-    private SerializerInterface $serializer;
-    private ValidatorInterface $validator;
-
-    public  function __construct(SerializerInterface $serializer, ValidatorInterface $validator)
-    {
-        $this->serializer = $serializer;
-        $this->validator = $validator;
-    }
+    public  function __construct(
+        private readonly SerializerInterface $serializer,
+        private  readonly ValidatorInterface $validator
+    )
+    {}
 
     /**
      * @throws \Exception
