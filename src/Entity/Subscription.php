@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\Subscription\Status;
 use App\Repository\SubscriptionRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,8 +23,8 @@ class Subscription
     #[ORM\JoinColumn(nullable: false)]
     private ?App $app = null;
 
-    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
-    private ?int $status = null;
+    #[ORM\Column(nullable: true, enumType: Status::class)]
+    private ?Status $status = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $expireDateTime = null;
@@ -68,12 +69,12 @@ class Subscription
         return $this;
     }
 
-    public function getStatus(): ?int
+    public function getStatus(): ?Status
     {
         return $this->status;
     }
 
-    public function setStatus(?int $status): static
+    public function setStatus(?Status $status): static
     {
         $this->status = $status;
 
