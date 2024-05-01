@@ -2,28 +2,41 @@
 
 namespace App\Controller;
 
-use App\Entity\Device;
-use App\Service\DeviceService;
+use App\Dto\Request\Subscription\CheckRequestDto;
+use App\Dto\Response\Subscription\CheckResponseDto;
+use App\Repository\AccessTokenRepository;
+use App\Traits\JsonResponseTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 class SubscriptionController extends AbstractController
 {
-    #[Route('/check-subscription/{clientToken}', name: 'app_subscription', methods: 'GET')]
-    public function check(string $clientToken, DeviceService $registerService): JsonResponse
-    {
-        $device = $registerService->findDevice(['accessToken' => $accessToken]);
+    use JsonResponseTrait;
 
-        if (!$device) {
-            throw new NotFoundHttpException('DeviceModelDto Not Found');
+    /**
+     * @throws ExceptionInterface
+     */
+    #[Route('/check-subscription', name: 'app_check_subscription', methods: 'POST')]
+    public function check(CheckRequestDto $checkRequestDto, AccessTokenRepository $accessTokenRepository): JsonResponse
+    {
+        $accessToken = $accessTokenRepository->findOneBy(['token' => $checkRequestDto->clientToken]);
+
+        if (!$accessToken) {
+            throw new BadRequestHttpException('Invalid clientToken');
         }
 
+        $response = new CheckResponseDto();
 
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/SubscriptionController.php',
-        ]);
+        $subscription = $accessToken->getSubscription();
+
+        if ($subscription) {
+            $response->status = $subscription->getStatus();
+            $response->expireDate = $subscription->getExpireDateTime();
+        }
+
+        return $this->successResponse($response);
     }
 }
