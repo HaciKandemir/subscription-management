@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\SubscriptionRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SubscriptionRepository::class)]
@@ -24,17 +25,22 @@ class Subscription
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $clientToken = null;
 
-    #[ORM\Column(length: 50)]
-    private ?string $status = null;
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $status = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $expireDateTime = null;
 
-    #[ORM\Column]
+    #[ORM\Column(options: ['default' => "CURRENT_TIMESTAMP"])]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
+
+    public function __construct()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -77,12 +83,12 @@ class Subscription
         return $this;
     }
 
-    public function getStatus(): ?string
+    public function getStatus(): ?int
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(?int $status): static
     {
         $this->status = $status;
 
