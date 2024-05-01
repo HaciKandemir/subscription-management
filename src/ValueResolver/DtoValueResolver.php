@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -45,6 +46,7 @@ class DtoValueResolver implements ValueResolverInterface
                 json_encode($data,JSON_THROW_ON_ERROR),
                 $argumentType,
                 'json',
+                [AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true]
             );
 
         } catch (\Exception $exception) {
