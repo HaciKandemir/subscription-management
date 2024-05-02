@@ -71,7 +71,7 @@ class SubscriptionService
         if (
             $subscription &&
             $subscription->getStatus() === Status::ACTIVE &&
-            $subscription->getExpireDateTime()->getTimestamp() >= time()
+            $subscription->getExpireAt()->getTimestamp() >= time()
         ) {
             throw new BadRequestHttpException('Already have a active subscription');
         }
@@ -93,7 +93,7 @@ class SubscriptionService
             $subscription->setUpdatedAt(new \DateTimeImmutable());
         }
 
-        $subscription->setExpireDateTime(new \DateTimeImmutable($approveResult['expireDate']));
+        $subscription->setExpireAt(new \DateTimeImmutable($approveResult['expireDate']));
         $subscription->setStatus(Status::ACTIVE);
 
         $this->em->persist($subscription);

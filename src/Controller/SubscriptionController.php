@@ -37,7 +37,7 @@ class SubscriptionController extends AbstractController
 
         if ($subscription) {
             $response->status = $subscription->getStatus();
-            $response->expireDate = $subscription->getExpireDateTime();
+            $response->expireDate = $subscription->getExpireAt();
         }
 
         return $this->successResponse($response);
@@ -55,7 +55,7 @@ class SubscriptionController extends AbstractController
         $response = new CheckResponseDto();
 
         $response->status = $subscription->getStatus();
-        $response->expireDate = $subscription->getExpireDateTime();
+        $response->expireDate = $subscription->getExpireAt();
 
         return $this->successResponse($response);
     }

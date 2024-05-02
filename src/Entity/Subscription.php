@@ -27,7 +27,7 @@ class Subscription
     private ?Status $status = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $expireDateTime = null;
+    private ?\DateTimeImmutable $expireAt = null;
 
     #[ORM\Column(options: ['default' => "CURRENT_TIMESTAMP"])]
     private ?\DateTimeImmutable $createdAt = null;
@@ -81,14 +81,14 @@ class Subscription
         return $this;
     }
 
-    public function getExpireDateTime(): ?\DateTimeImmutable
+    public function getExpireAt(): ?\DateTimeImmutable
     {
-        return $this->expireDateTime;
+        return $this->expireAt;
     }
 
-    public function setExpireDateTime(?\DateTimeImmutable $expireDateTime): static
+    public function setExpireAt(?\DateTimeImmutable $expireDateTime): static
     {
-        $this->expireDateTime = $expireDateTime;
+        $this->expireAt = $expireDateTime;
 
         return $this;
     }

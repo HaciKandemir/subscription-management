@@ -34,7 +34,7 @@ class AccessTokenService
         return $accessToken;
     }
 
-    public function findByToken(string $token)
+    public function findByToken(string $token): ?AccessToken
     {
         return $this->accessTokenRepository->findOneBy(['token' => $token]);
     }
