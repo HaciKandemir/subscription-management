@@ -18,7 +18,9 @@ class DeviceService
         private readonly ParameterBagInterface $params,
         private readonly AccessTokenService $accessTokenService
     )
-    {}
+    {
+
+    }
 
     public function generateToken(): string
     {

@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Dto\Request\Subscription\CheckRequestDto;
+use App\Dto\Request\Subscription\PurchaseRequestDto;
 use App\Dto\Response\Subscription\CheckResponseDto;
-use App\Repository\AccessTokenRepository;
+use App\Service\AccessTokenService;
+use App\Service\SubscriptionService;
 use App\Traits\JsonResponseTrait;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -12,6 +14,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
+#[Route('/subscription')]
 class SubscriptionController extends AbstractController
 {
     use JsonResponseTrait;
@@ -19,10 +22,10 @@ class SubscriptionController extends AbstractController
     /**
      * @throws ExceptionInterface
      */
-    #[Route('/check-subscription', name: 'app_check_subscription', methods: 'POST')]
-    public function check(CheckRequestDto $checkRequestDto, AccessTokenRepository $accessTokenRepository): JsonResponse
+    #[Route('/check', name: 'app_subscription_check', methods: 'POST')]
+    public function check(CheckRequestDto $checkRequestDto, AccessTokenService $accessTokenService): JsonResponse
     {
-        $accessToken = $accessTokenRepository->findOneBy(['token' => $checkRequestDto->clientToken]);
+        $accessToken = $accessTokenService->findByToken($checkRequestDto->clientToken);
 
         if (!$accessToken) {
             throw new BadRequestHttpException('Invalid clientToken');
@@ -36,6 +39,23 @@ class SubscriptionController extends AbstractController
             $response->status = $subscription->getStatus();
             $response->expireDate = $subscription->getExpireDateTime();
         }
+
+        return $this->successResponse($response);
+    }
+
+    /**
+     * @throws ExceptionInterface
+     * @throws \Exception
+     */
+    #[Route('/purchase', name: 'app_subscription_purchase', methods: 'POST')]
+    public function purchase(PurchaseRequestDto $purchaseRequestDto, SubscriptionService $subscriptionService): JsonResponse
+    {
+        $subscription = $subscriptionService->purchase($purchaseRequestDto);
+
+        $response = new CheckResponseDto();
+
+        $response->status = $subscription->getStatus();
+        $response->expireDate = $subscription->getExpireDateTime();
 
         return $this->successResponse($response);
     }
